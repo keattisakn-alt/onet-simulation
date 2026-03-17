@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="ONet Implementation & Simulation Plan — Team roles, weekly sprints, and deliverables.">
+    <title>ONet — Implementation Plan</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <a href="index.html" class="nav-logo">⬡ ONet</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Architecture</a></li>
+            <li><a href="plan.html">Plan</a></li>
+            <li><a href="simulation.html">Simulation</a></li>
+            <li><a href="results.html">Results</a></li>
+        </ul>
+        <div class="hamburger" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="hero" style="min-height: 50vh; padding-bottom: 2rem;">
+        <div class="hero-badge fade-in">
+            <span class="dot"></span>
+            4-Week Sprint
+        </div>
+        <h1 class="fade-in fade-in-delay-1">
+            Implementation &<br><span class="gradient-text">Simulation Plan</span>
+        </h1>
+        <p class="fade-in fade-in-delay-2">
+            A structured 4-week plan with 5 team members to design, implement, and validate the ONet architecture.
+        </p>
+    </section>
+
+    <!-- Team Roles -->
+    <section class="section" id="team">
+        <div class="section-inner">
+            <div class="section-header fade-in">
+                <span class="label">Team</span>
+                <h2>Roles & Responsibilities</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="grid-3 fade-in fade-in-delay-1"
+                style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                <div class="card team-card">
+                    <div class="team-avatar">KN</div>
+                    <h3>Kiattisak Nantarat</h3>
+                    <p class="team-role">Project Manager & System Architect</p>
+                    <p style="font-size:0.82rem; margin-top:0.5rem;">Oversees architectural integration, manages GitHub,
+                        finalizes architecture spec.</p>
+                </div>
+                <div class="card team-card">
+                    <div class="team-avatar">SK</div>
+                    <h3>Supawat Kaitong</h3>
+                    <p class="team-role">NDN Protocol Specialist</p>
+                    <p style="font-size:0.82rem; margin-top:0.5rem;">Configures ndnSIM, defines naming conventions,
+                        constructs State Capsule packets.</p>
+                </div>
+                <div class="card team-card">
+                    <div class="team-avatar">PM</div>
+                    <h3>Pakin Meksuwan</h3>
+                    <p class="team-role">Security & Consensus Engineer</p>
+                    <p style="font-size:0.82rem; margin-top:0.5rem;">Designs capability-based security and PBFT
+                        consensus simulation.</p>
+                </div>
+                <div class="card team-card">
+                    <div class="team-avatar">NR</div>
+                    <h3>Nakarin Na Ranong</h3>
+                    <p class="team-role">ns-3 Simulation Engineer</p>
+                    <p style="font-size:0.82rem; margin-top:0.5rem;">Builds federated mesh topology in C++/Python,
+                        configures mobility models.</p>
+                </div>
+                <div class="card team-card">
+                    <div class="team-avatar">SW</div>
+                    <h3>Sorawit Wansen</h3>
+                    <p class="team-role">ns-3 Simulation Engineer</p>
+                    <p style="font-size:0.82rem; margin-top:0.5rem;">Scripts test scenarios, implements data collection
+                        for latency & packet loss.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sprint Timeline -->
+    <section class="section" id="sprints">
+        <div class="section-inner">
+            <div class="section-header fade-in">
+                <span class="label">Schedule</span>
+                <h2>Weekly Sprints</h2>
+                <div class="divider"></div>
+            </div>
+
+            <div class="timeline fade-in fade-in-delay-1">
+                <!-- Week 1 -->
+                <div class="timeline-item">
+                    <span class="timeline-week">Week 1</span>
+                    <h3>Environment Setup & Baseline Topologies</h3>
+                    <ul class="timeline-tasks">
+                        <li>ติดตั้ง Linux (Ubuntu), ns-3 และโมดูล ndnSIM บนเครื่องของสมาชิกทุกคน</li>
+                        <li>กำหนด topology เครือข่ายแบบ mesh (Omnitrix node เคลื่อนที่ 10 ตัว, Plumber consensus node
+                            คงที่ 3 ตัว)
+                        </li>
+                        <li>ร่างการจำลอง TCP/IP พื้นฐาน เพื่อใช้เปรียบเทียบกับกรณีล้มเหลว</li>
+                    </ul>
+                    <div class="timeline-deliverable"><strong>ผลลัพธ์:</strong> การจำลอง "Hello World"
+                        ที่ทำงานได้ใน ndnSIM</div>
+                </div>
+
+                <!-- Week 2 -->
+                <div class="timeline-item">
+                    <span class="timeline-week">Week 2</span>
+                    <h3>Protocol Implementation (State Capsules)</h3>
+                    <ul class="timeline-tasks">
+                        <li>สร้าง NDN Interest และ Data packet แบบกำหนดเอง ที่เป็นตัวแทน "State Capsules"</li>
+                        <li>พัฒนาระบบ in-network caching เพื่อให้ node เคลื่อนที่สามารถแชร์ DNA packet
+                            กันได้โดยไม่ต้องผ่าน server กลาง</li>
+                        <li>เขียนสคริปต์จำลองการที่ node ร้องขอการ transformation (ดึง DNA packet)</li>
+                    </ul>
+                    <div class="timeline-deliverable"><strong>ผลลัพธ์:</strong> การแลกเปลี่ยน packet สำเร็จ
+                        ที่แสดงการ routing แบบอิงเนื้อหา</div>
+                </div>
+
+                <!-- Week 3 -->
+                <div class="timeline-item">
+                    <span class="timeline-week">Week 3</span>
+                    <h3>Edge Cases, Security & Network Partitions</h3>
+                    <ul class="timeline-tasks">
+                        <li><strong>Scenario A:</strong> Network Partition — จำลองการตัดขาด link ที่ทำให้ Omnitrix node
+                            ถูกแยกออก;
+                            ตรวจสอบว่าการ transformation จากแคชยังใช้งานได้</li>
+                        <li><strong>Scenario B:</strong> Federated Consensus — จำลองการขอเอเลี่ยนตัวใหม่
+                            พร้อมความหน่วงจากกระบวนการ PBFT consensus</li>
+                    </ul>
+                    <div class="timeline-deliverable"><strong>ผลลัพธ์:</strong> ไฟล์ trace (.pcap / .tr) ที่บันทึก
+                        พฤติกรรมของเครือข่ายภายใต้สถานการณ์กดดัน</div>
+                </div>
+
+                <!-- Week 4 -->
+                <div class="timeline-item">
+                    <span class="timeline-week">Week 4</span>
+                    <h3>Data Analysis, Reporting & Presentation</h3>
+                    <ul class="timeline-tasks">
+                        <li>ดึงข้อมูลตัววัด (Throughput, Latency, Cache Hit Ratio) จากผลลัพธ์ ns-3</li>
+                        <li>สร้างกราฟเปรียบเทียบ ONet mesh กับ TCP/IP มาตรฐาน</li>
+                        <li>รวบรวมรายงานฉบับสมบูรณ์พร้อมแนวคิดเชิงทฤษฎีและผลการจำลอง</li>
+                        <li>บันทึกวิดีโอนำเสนอ</li>
+                    </ul>
+                    <div class="timeline-deliverable"><strong>ผลลัพธ์:</strong> เอกสารสถาปัตยกรรม, codebase ฉบับสมบูรณ์,
+                        กราฟตัววัด, และวิดีโอนำเสนอ</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>ONet — Omnitrix Communication Network © 2026 | <span>Group 3</span> | CP352005 Computer Networks</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

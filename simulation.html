@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="ONet Interactive Simulation — Visualize Bio-SCION architecture scenarios: local cache, federated consensus, and network partitions.">
+    <title>ONet — Interactive Simulation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <a href="index.html" class="nav-logo">⬡ ONet</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Architecture</a></li>
+            <li><a href="plan.html">Plan</a></li>
+            <li><a href="simulation.html">Simulation</a></li>
+            <li><a href="results.html">Results</a></li>
+        </ul>
+        <div class="hamburger" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="hero" style="min-height: 45vh; padding-bottom: 1rem;">
+        <div class="hero-badge fade-in">
+            <span class="dot"></span>
+            Interactive Demo
+        </div>
+        <h1 class="fade-in fade-in-delay-1">
+            Network<br><span class="gradient-text">Simulation</span>
+        </h1>
+        <p class="fade-in fade-in-delay-2">
+            Visualize the seven core scenarios of the ONet Bio-SCION architecture in real-time.
+        </p>
+    </section>
+
+    <!-- Simulation -->
+    <section class="section" style="padding-top: 1rem;">
+        <div class="sim-container">
+
+            <!-- Controls -->
+            <div class="sim-controls fade-in">
+                <button class="btn btn-outline" onclick="runScenario(1)" id="btn-s1">
+                    ⚡ S1: Local Cache
+                </button>
+                <button class="btn btn-outline" onclick="runScenario(2)" id="btn-s2">
+                    🤝 S2: Consensus
+                </button>
+                <button class="btn btn-outline" onclick="runScenario(3)" id="btn-s3">
+                    💔 S3: Partition
+                </button>
+                <button class="btn btn-outline" onclick="runScenario(4)" id="btn-s4">
+                    📦 S4: Peer Cache
+                </button>
+                <button class="btn btn-outline" onclick="runScenario(5)" id="btn-s5">
+                    🚫 S5: Rejection
+                </button>
+                <button class="btn btn-outline" onclick="runScenario(6)" id="btn-s6">
+                    🏃 S6: Mobility
+                </button>
+                <button class="btn btn-outline" onclick="runScenario(7)" id="btn-s7">
+                    🔀 S7: Multi-hop
+                </button>
+                <button class="btn btn-primary" onclick="runAllScenarios()" id="btn-run-all" style="margin-left: 0.5rem;">
+                    ▶ Run All Scenarios
+                </button>
+            </div>
+
+            <!-- Canvas -->
+            <div class="sim-canvas fade-in fade-in-delay-1" id="sim-canvas">
+                <!-- Nodes and links are drawn by JS -->
+            </div>
+
+            <!-- Scenario Info Cards — Thai Descriptions -->
+            <div class="section-header fade-in" style="margin-top: 1rem;">
+                <span class="label">อธิบาย Scenarios</span>
+                <h2 style="font-size: 1.2rem;">การทำงานของแต่ละสถานการณ์จำลอง</h2>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 1.2rem; margin-bottom: 2rem;">
+
+                <!-- Scenario 1 -->
+                <div class="card fade-in" style="padding: 1.5rem;">
+                    <h3 style="font-size: 1rem; color: var(--neon-green); margin-bottom: 0.6rem;">⚡ Scenario 1 — Local
+                        Cache Hit (ดึงข้อมูลจากแคชภายใน)</h3>
+                    <p style="font-size: 0.88rem; margin-bottom: 0.6rem;">
+                        <strong>สถานการณ์:</strong> Node "Ben-01" ต้องการ DNA ของ Tetramand
+                        ซึ่ง<strong>มีอยู่ในแคชของตัวเอง</strong>อยู่แล้ว
+                    </p>
+                    <p style="font-size: 0.88rem; margin-bottom: 0.6rem;">
+                        <strong>การทำงาน:</strong> ระบบตรวจสอบแคชภายในของ Node แล้วพบข้อมูลที่ต้องการ → ดำเนินการ
+                        Transformation ได้ทันที
+                        <strong>โดยไม่ต้องใช้เครือข่ายเลย</strong> ทำให้ Latency ต่ำมาก (~1-5 ms)
+                    </p>
+                    <p style="font-size: 0.88rem;">
+                        <strong>สิ่งที่พิสูจน์:</strong> ระบบ <strong>Tier 1 (Local Authority)</strong>
+                        สามารถทำงานได้แม้ไม่มีการเชื่อมต่อเครือข่าย
+                        — เหมาะสำหรับสถานการณ์ฉุกเฉินที่ต้องการ real-time response
+                    </p>
+                </div>
+
+                <!-- Scenario 2 -->
+                <div class="card fade-in" style="padding: 1.5rem;">
+                    <h3 style="font-size: 1rem; color: var(--neon-cyan); margin-bottom: 0.6rem;">🤝 Scenario 2 —
+                        Federated Consensus (ลงมติแบบกระจายศูนย์)</h3>
+                    <p style="font-size: 0.88rem; margin-bottom: 0.6rem;">
+                        <strong>สถานการณ์:</strong> Node "Ben-01" ต้องการ DNA ของ Galvan ซึ่ง<strong>ไม่มีในแคช</strong>
+                        (เอเลี่ยนตัวใหม่ที่ยังไม่เคยใช้)
+                    </p>
+                    <p style="font-size: 0.88rem; margin-bottom: 0.6rem;">
+                        <strong>การทำงาน:</strong> Node ส่ง Interest Packet ไปยัง Plumber Nodes ทั้ง 3 ตัว → Plumber
+                        Nodes รันกระบวนการ
+                        <strong>PBFT Consensus</strong> (ลงมติร่วมกัน) เพื่อตรวจสอบว่าคำขอนี้ผ่านข้อกำหนดด้านจริยธรรม →
+                        ถ้าผ่าน
+                        ก็จะออก Capability Token และส่ง Data Packet กลับมาให้
+                    </p>
+                    <p style="font-size: 0.88rem;">
+                        <strong>สิ่งที่พิสูจน์:</strong> ระบบ <strong>Tier 2 (Federated Consensus)</strong>
+                        ใช้การลงมติแบบกระจายศูนย์เพื่อปลดล็อกข้อมูลใหม่
+                        — Latency สูงกว่า Tier 1 (~150-350 ms) แต่มีความปลอดภัยสูงเพราะต้องผ่านการตรวจสอบจากหลาย Node
+                    </p>
+                </div>
+
+                <!-- Scenario 3 -->
+                <div class="card fade-in" style="padding: 1.5rem;">
+                    <h3 style="font-size: 1rem; color: var(--neon-pink); margin-bottom: 0.6rem;">💔 Scenario 3 — Network
+                        Partition (เครือข่ายถูกแบ่งแยก)</h3>
+                    <p style="font-size: 0.88rem; margin-bottom: 0.6rem;">
+                        <strong>สถานการณ์:</strong> Node "Gwen-02" <strong>ถูกตัดขาดจากเครือข่าย</strong> (เช่น
+                        สัญญาณขาดหาย, link failure)
+                        แล้วทดสอบ 2 กรณี
+                    </p>
+                    <p style="font-size: 0.88rem; margin-bottom: 0.6rem;">
+                        <strong>การทำงาน:</strong><br>
+                        • <strong>Test A:</strong> ขอ DNA ที่มีในแคช (Tetramand) → ✅ <strong>สำเร็จ!</strong>
+                        ใช้ข้อมูลจากแคชได้แม้ไม่มีเน็ต<br>
+                        • <strong>Test B:</strong> ขอ DNA ที่ไม่มีในแคช (Kineceleran) → ❌ <strong>ล้มเหลว!</strong>
+                        ต้องใช้ Consensus แต่ติดต่อ Plumber Nodes ไม่ได้
+                    </p>
+                    <p style="font-size: 0.88rem;">
+                        <strong>สิ่งที่พิสูจน์:</strong> สถาปัตยกรรม ONet ทนต่อ <strong>Network Partition</strong> ได้ —
+                        ข้อมูลสำคัญที่แคชไว้แล้ว
+                        ยังคงใช้งานได้เสมอ (life-critical safety) แม้เครือข่ายจะล่ม
+                    </p>
+                </div>
+
+                <!-- Scenario 4 -->
+                <div class="card fade-in" style="padding: 1.5rem;">
+                    <h3 style="font-size: 1rem; color: var(--neon-green); margin-bottom: 0.6rem;">📦 Scenario 4 —
+                        In-Network Caching (แชร์ข้อมูลผ่าน Peer Cache)</h3>
+                    <p style="font-size: 0.88rem; margin-bottom: 0.6rem;">
+                        <strong>สถานการณ์:</strong> Ben-01 ดึง DNA ของ Galvan จาก Server แล้ว Cache ไว้ → จากนั้น
+                        Gwen-02 ขอ DNA ตัวเดียวกัน
+                    </p>
+                    <p style="font-size: 0.88rem; margin-bottom: 0.6rem;">
+                        <strong>การทำงาน:</strong> เมื่อ Gwen-02 ส่ง Interest Packet ออกไป ระบบ NDN จะค้นหาข้อมูลจาก
+                        Node ที่ใกล้ที่สุดที่มีข้อมูลนั้นอยู่
+                        → พบว่า <strong>Ben-01 มีอยู่ในแคชแล้ว</strong> → ส่ง Data จาก Ben โดยตรง
+                        <strong>โดยไม่ต้องไปถึง Server</strong> ทำให้ Latency ลดลงมาก (~10-30 ms)
+                    </p>
+                    <p style="font-size: 0.88rem;">
+                        <strong>สิ่งที่พิสูจน์:</strong> ระบบ <strong>In-Network Caching</strong> ของ NDN ช่วยให้ Node
+                        ต่างๆ
+                        แชร์ข้อมูลกันได้แบบ peer-to-peer — ลดภาระจาก Server กลาง และเพิ่ม fault tolerance
+                    </p>
+                </div>
+
+                <!-- Scenario 5 -->
+                <div class="card fade-in" style="padding: 1.5rem;">
+                    <h3 style="font-size: 1rem; color: var(--neon-pink); margin-bottom: 0.6rem;">🚫 Scenario 5 —
+                        Consensus Rejection (ถูกปฏิเสธจากระบบ Consensus)</h3>
+                    <p style="font-size: 0.88rem; margin-bottom: 0.6rem;">
+                        <strong>สถานการณ์:</strong> Ben-01 ขอ DNA ของ <strong>Ectonurite</strong> —
+                        สิ่งมีชีวิตที่ถูก<strong>จำกัดการเข้าถึง</strong>
+                        ภายใต้ระบบ Alien Species Preservation System (ASPS)
+                    </p>
+                    <p style="font-size: 0.88rem; margin-bottom: 0.6rem;">
+                        <strong>การทำงาน:</strong> Plumber Nodes ทั้ง 3 ตัวรับคำขอ → รัน PBFT Consensus →
+                        ตรวจสอบกับนโยบาย ASPS
+                        → พบว่า Ectonurite เป็นสิ่งมีชีวิตที่ต้องอนุรักษ์ → ทุก Node <strong>โหวต REJECT ❌</strong>
+                        → ส่ง Reject Packet กลับไป → Ben-01 ไม่ได้รับ Capability Token
+                    </p>
+                    <p style="font-size: 0.88rem;">
+                        <strong>สิ่งที่พิสูจน์:</strong> ระบบ Federated Consensus
+                        <strong>ป้องกันการเข้าถึงข้อมูลที่ไม่ได้รับอนุญาต</strong>
+                        — ทำหน้าที่เป็น access control แบบกระจายศูนย์ที่ไม่มีจุดล้มเหลวจุดเดียว (no single point of
+                        failure)
+                    </p>
+                </div>
+
+                <!-- Scenario 6 -->
+                <div class="card fade-in" style="padding: 1.5rem;">
+                    <h3 style="font-size: 1rem; color: var(--neon-cyan); margin-bottom: 0.6rem;">🏃 Scenario 6 — Node
+                        Mobility (Node เคลื่อนที่ในเครือข่าย)</h3>
+                    <p style="font-size: 0.88rem; margin-bottom: 0.6rem;">
+                        <strong>สถานการณ์:</strong> Ben-01 เป็น Node ที่<strong>เคลื่อนที่</strong>อยู่ตลอดเวลา —
+                        เริ่มจากอยู่ใกล้ Plumber-1 แล้วเคลื่อนไปอยู่ใกล้ Plumber-2
+                    </p>
+                    <p style="font-size: 0.88rem; margin-bottom: 0.6rem;">
+                        <strong>การทำงาน:</strong> Ben-01 ดึง DNA จาก Plumber-1 ตอนอยู่ใกล้ →
+                        จากนั้น<strong>เคลื่อนที่ข้ามเครือข่าย</strong>
+                        → Topology อัพเดตแบบ dynamic (links เปลี่ยนตามตำแหน่ง) → เมื่อขอ DNA ใหม่
+                        ระบบจะ route ไปยัง <strong>Plumber-2 ที่อยู่ใกล้ที่สุด</strong>โดยอัตโนมัติ — ไม่มี session หลุด
+                    </p>
+                    <p style="font-size: 0.88rem;">
+                        <strong>สิ่งที่พิสูจน์:</strong> การ routing แบบ NDN <strong>ปรับตัวตาม Node mobility
+                            ได้</strong>
+                        — ไม่เหมือน TCP/IP ที่ต้อง re-establish connection ใหม่เมื่อเปลี่ยนเครือข่าย
+                        (seamless handoff)
+                    </p>
+                </div>
+
+                <!-- Scenario 7 -->
+                <div class="card fade-in" style="padding: 1.5rem;">
+                    <h3 style="font-size: 1rem; color: #a855f7; margin-bottom: 0.6rem;">🔀 Scenario 7 — Multi-hop
+                        Routing (ส่งข้อมูลผ่านหลาย Node)</h3>
+                    <p style="font-size: 0.88rem; margin-bottom: 0.6rem;">
+                        <strong>สถานการณ์:</strong> Gwen-02 ต้องการ DNA ของ Wildmutt แต่<strong>ไม่มี link ตรงไปยัง
+                            Plumber-1</strong>
+                        ที่เก็บข้อมูลนั้น — ต้อง relay ผ่าน Plumber-3
+                    </p>
+                    <p style="font-size: 0.88rem; margin-bottom: 0.6rem;">
+                        <strong>การทำงาน:</strong><br>
+                        • <strong>Hop 1:</strong> Gwen-02 ส่ง Interest → Plumber-3 (ไม่มีข้อมูล → forward ต่อ)<br>
+                        • <strong>Hop 2:</strong> Plumber-3 ส่ง Interest → Plumber-1 (พบข้อมูล!)<br>
+                        • <strong>กลับ:</strong> Plumber-1 ส่ง Data → Plumber-3 (<strong>cache ไว้ระหว่างทาง</strong>) →
+                        Gwen-02
+                    </p>
+                    <p style="font-size: 0.88rem;">
+                        <strong>สิ่งที่พิสูจน์:</strong> NDN routing <strong>ส่งข้อมูลแบบ multi-hop</strong>
+                        ได้โดยไม่ต้องมี direct connection
+                        — และ Node ที่อยู่ระหว่างทาง (Plumber-3) จะ <strong>cache ข้อมูลไว้อัตโนมัติ</strong>
+                        เพื่อให้การขอข้อมูลครั้งถัดไปเร็วขึ้น
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Log Output -->
+            <div class="section-header fade-in">
+                <span class="label">Output</span>
+                <h2 style="font-size: 1.2rem;">Simulation Log</h2>
+            </div>
+            <div class="sim-log fade-in fade-in-delay-1" id="sim-log">
+                <div class="log-info">Select a scenario above to begin the simulation...</div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;" class="fade-in fade-in-delay-2">
+                <a href="results.html" class="btn btn-primary">📊 View Final Results →</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>ONet — Omnitrix Communication Network © 2026 | <span>Group 3</span> | CP352005 Computer Networks</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

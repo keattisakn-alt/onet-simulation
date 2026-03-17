@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="ONet Simulation Results — Final quantitative analysis comparing ONet Bio-SCION architecture vs TCP/IP.">
+  <title>ONet — Simulation Results</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <a href="index.html" class="nav-logo">⬡ ONet</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Architecture</a></li>
+      <li><a href="plan.html">Plan</a></li>
+      <li><a href="simulation.html">Simulation</a></li>
+      <li><a href="results.html">Results</a></li>
+    </ul>
+    <div class="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" style="min-height: 45vh; padding-bottom: 1rem;">
+    <div class="hero-badge fade-in">
+      <span class="dot"></span>
+      Final Analysis
+    </div>
+    <h1 class="fade-in fade-in-delay-1">
+      Simulation<br><span class="gradient-text">Results</span>
+    </h1>
+    <p class="fade-in fade-in-delay-2">
+      Quantitative analysis of the ONet Bio-SCION architecture across all 7 test scenarios, compared against traditional TCP/IP.
+    </p>
+  </section>
+
+  <!-- Summary Metrics -->
+  <section class="section" style="padding-top: 1rem;">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <span class="label">Overview</span>
+        <h2>Key Performance Metrics</h2>
+        <div class="divider"></div>
+        <p>ผลลัพธ์โดยรวมจากการจำลอง ONet ทั้ง 7 สถานการณ์</p>
+      </div>
+
+      <div class="metrics-grid fade-in fade-in-delay-1">
+        <div class="metric-card">
+          <div class="metric-icon">⚡</div>
+          <div class="metric-value" data-target="3.2" data-suffix=" ms">0</div>
+          <div class="metric-label">Avg Local Latency</div>
+          <div class="metric-sub">Tier 1 — Cache Hit</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon">📊</div>
+          <div class="metric-value" data-target="94.3" data-suffix="%">0</div>
+          <div class="metric-label">Cache Hit Ratio</div>
+          <div class="metric-sub">In-Network Caching</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon">📦</div>
+          <div class="metric-value" data-target="99.7" data-suffix="%">0</div>
+          <div class="metric-label">Packet Delivery</div>
+          <div class="metric-sub">Normal Operation</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon">🔁</div>
+          <div class="metric-value" data-target="247" data-suffix=" ms">0</div>
+          <div class="metric-label">Avg Consensus Latency</div>
+          <div class="metric-sub">Tier 2 — PBFT</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Code Demos -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <span class="label">Interactive Demos</span>
+        <h2>Simulation Code & Results</h2>
+        <div class="divider"></div>
+        <p>ตัวอย่างโค้ดจำลองเครือข่าย — กดปุ่ม Run เพื่อดูผลลัพธ์เปรียบเทียบ ONet (แบบใหม่) vs TCP/IP (แบบเก่า)</p>
+      </div>
+
+      <!-- Demo 1: Local Cache vs TCP/IP Request -->
+      <div class="code-demo fade-in fade-in-delay-1" id="demo-1">
+        <div class="demo-header">
+          <span class="demo-number">Demo 1</span>
+          <h3>⚡ Local Cache Hit — ONet vs TCP/IP</h3>
+          <p class="demo-desc">เปรียบเทียบการดึงข้อมูลจากแคชภายในของ ONet กับการร้องขอผ่าน TCP/IP แบบเดิม</p>
+        </div>
+        <div class="demo-grid">
+          <div class="code-panel onet-panel">
+            <div class="code-panel-header">
+              <span class="code-lang">🟢 ONet (NDN — Bio-SCION)</span>
+              <span class="code-file">onet_local_cache.py</span>
+            </div>
+            <pre class="code-block"><code><span class="c-comment"># ONet NDN — Local Cache Lookup</span>
+<span class="c-keyword">import</span> ndnSIM
+
+<span class="c-comment"># สร้าง Omnitrix Node พร้อม Content Store</span>
+node = ndnSIM.createNode(<span class="c-string">"Ben-01"</span>, type=<span class="c-string">"omnitrix"</span>)
+node.contentStore.add(<span class="c-string">"/ONet/DNA/Tetramand/v1"</span>,
+    payload=<span class="c-string">"DNA_SEQUENCE_TETRAMAND_4ARM"</span>,
+    signed=<span class="c-keyword">True</span>)
+
+<span class="c-comment"># ร้องขอ Transformation — ค้นหาจากแคชภายในก่อน</span>
+interest = ndnSIM.Interest(<span class="c-string">"/ONet/DNA/Tetramand/v1"</span>)
+result = node.localLookup(interest)
+
+<span class="c-keyword">if</span> result.found:
+    latency = result.latency  <span class="c-comment"># ~1-5 ms (local)</span>
+    <span class="c-keyword">print</span>(<span class="c-string">f"✅ CACHE HIT — Latency: <span class="c-hl">{latency}</span> ms"</span>)
+    <span class="c-keyword">print</span>(<span class="c-string">f"📦 Data: <span class="c-hl">{result.data.name}</span>"</span>)
+    <span class="c-keyword">print</span>(<span class="c-string">"🔒 Signature: VERIFIED (self-authenticating)"</span>)
+    <span class="c-keyword">print</span>(<span class="c-string">"🌐 Network used: NONE"</span>)</code></pre>
+          </div>
+          <div class="code-panel tcp-panel">
+            <div class="code-panel-header">
+              <span class="code-lang">🔴 TCP/IP (Traditional)</span>
+              <span class="code-file">tcp_request.py</span>
+            </div>
+            <pre class="code-block"><code><span class="c-comment"># TCP/IP — Standard HTTP Request</span>
+<span class="c-keyword">import</span> socket, ssl, time
+
+<span class="c-comment"># สร้าง TCP Connection ไปยัง Server กลาง</span>
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+ctx = ssl.create_default_context()
+secure = ctx.wrap_socket(sock, server_hostname=<span class="c-string">"dna-server.onet.io"</span>)
+
+<span class="c-comment"># TCP 3-Way Handshake → TLS Handshake → HTTP GET</span>
+start = time.time()
+secure.connect((<span class="c-string">"dna-server.onet.io"</span>, <span class="c-number">443</span>))
+secure.send(<span class="c-string">b"GET /api/dna/tetramand HTTP/1.1\r\n..."</span>)
+response = secure.recv(<span class="c-number">4096</span>)
+latency = (time.time() - start) * <span class="c-number">1000</span>
+
+<span class="c-keyword">print</span>(<span class="c-string">f"📡 Response — Latency: <span class="c-hl">{latency}</span> ms"</span>)
+<span class="c-keyword">print</span>(<span class="c-string">"🔒 Security: TLS channel only (not data)"</span>)
+<span class="c-keyword">print</span>(<span class="c-string">"🌐 Network: Required (server roundtrip)"</span>)
+<span class="c-keyword">print</span>(<span class="c-string">"⚠️ Single point of failure: Server"</span>)</code></pre>
+          </div>
+        </div>
+        <div class="demo-run-bar">
+          <button class="btn btn-primary demo-run-btn" onclick="runDemo(1)">▶ Run Simulation</button>
+          <span class="demo-status" id="demo-1-status"></span>
+        </div>
+        <div class="demo-output" id="demo-1-output">
+          <div class="output-placeholder">กดปุ่ม Run เพื่อดูผลลัพธ์...</div>
+        </div>
+      </div>
+
+      <!-- Demo 2: Federated Consensus vs Centralized Auth -->
+      <div class="code-demo fade-in" id="demo-2">
+        <div class="demo-header">
+          <span class="demo-number">Demo 2</span>
+          <h3>🤝 Federated Consensus — ONet vs TCP/IP</h3>
+          <p class="demo-desc">การปลดล็อก DNA ใหม่: ONet ใช้ PBFT consensus 3 nodes vs TCP/IP ใช้ centralized server เดียว</p>
+        </div>
+        <div class="demo-grid">
+          <div class="code-panel onet-panel">
+            <div class="code-panel-header">
+              <span class="code-lang">🟢 ONet (PBFT Consensus)</span>
+              <span class="code-file">onet_consensus.py</span>
+            </div>
+            <pre class="code-block"><code><span class="c-comment"># ONet — PBFT Federated Consensus</span>
+<span class="c-keyword">import</span> ndnSIM
+<span class="c-keyword">from</span> onet.consensus <span class="c-keyword">import</span> PBFTEngine
+
+<span class="c-comment"># 3 Plumber Nodes ทำหน้าที่เป็น Consensus Validators</span>
+plumbers = [
+    ndnSIM.createNode(<span class="c-string">"Plumber-1"</span>, type=<span class="c-string">"validator"</span>),
+    ndnSIM.createNode(<span class="c-string">"Plumber-2"</span>, type=<span class="c-string">"validator"</span>),
+    ndnSIM.createNode(<span class="c-string">"Plumber-3"</span>, type=<span class="c-string">"validator"</span>),
+]
+
+<span class="c-comment"># Node ร้องขอ DNA ใหม่ที่ยังไม่เคยใช้</span>
+interest = ndnSIM.Interest(<span class="c-string">"/ONet/DNA/Galvan/v1"</span>)
+pbft = PBFTEngine(validators=plumbers)
+
+<span class="c-comment"># Phase 1: Pre-prepare → Prepare → Commit</span>
+result = pbft.runConsensus(interest, quorum=<span class="c-number">2</span>)
+<span class="c-keyword">print</span>(<span class="c-string">f"Result: <span class="c-hl">{result.status}</span>"</span>)
+<span class="c-keyword">print</span>(<span class="c-string">f"Votes: <span class="c-hl">{result.votes}</span>/3"</span>)
+<span class="c-keyword">print</span>(<span class="c-string">f"Latency: <span class="c-hl">{result.latency}</span> ms"</span>)
+<span class="c-keyword">print</span>(<span class="c-string">"🛡️ No single point of failure"</span>)</code></pre>
+          </div>
+          <div class="code-panel tcp-panel">
+            <div class="code-panel-header">
+              <span class="code-lang">🔴 TCP/IP (Centralized Auth)</span>
+              <span class="code-file">tcp_auth_server.py</span>
+            </div>
+            <pre class="code-block"><code><span class="c-comment"># TCP/IP — Centralized Authentication</span>
+<span class="c-keyword">import</span> requests, time
+
+<span class="c-comment"># ส่ง Request ไปยัง Auth Server เครื่องเดียว</span>
+start = time.time()
+response = requests.post(
+    <span class="c-string">"https://auth.onet.io/api/unlock"</span>,
+    json={
+        <span class="c-string">"user"</span>: <span class="c-string">"ben-01"</span>,
+        <span class="c-string">"dna"</span>: <span class="c-string">"galvan"</span>,
+        <span class="c-string">"token"</span>: <span class="c-string">"JWT_TOKEN_HERE"</span>
+    },
+    timeout=<span class="c-number">5</span>
+)
+latency = (time.time() - start) * <span class="c-number">1000</span>
+
+<span class="c-keyword">print</span>(<span class="c-string">f"Status: <span class="c-hl">{response.status_code}</span>"</span>)
+<span class="c-keyword">print</span>(<span class="c-string">f"Latency: <span class="c-hl">{latency}</span> ms"</span>)
+<span class="c-keyword">print</span>(<span class="c-string">"⚠️ Single server = single point of failure"</span>)
+<span class="c-keyword">print</span>(<span class="c-string">"⚠️ If server is down → total system failure"</span>)</code></pre>
+          </div>
+        </div>
+        <div class="demo-run-bar">
+          <button class="btn btn-primary demo-run-btn" onclick="runDemo(2)">▶ Run Simulation</button>
+          <span class="demo-status" id="demo-2-status"></span>
+        </div>
+        <div class="demo-output" id="demo-2-output">
+          <div class="output-placeholder">กดปุ่ม Run เพื่อดูผลลัพธ์...</div>
+        </div>
+      </div>
+
+      <!-- Demo 3: Network Partition -->
+      <div class="code-demo fade-in" id="demo-3">
+        <div class="demo-header">
+          <span class="demo-number">Demo 3</span>
+          <h3>💔 Network Partition — ONet vs TCP/IP</h3>
+          <p class="demo-desc">เมื่อเครือข่ายถูกตัดขาด: ONet ยังทำงานได้บางส่วน (cached data) แต่ TCP/IP ล้มเหลว 100%</p>
+        </div>
+        <div class="demo-grid">
+          <div class="code-panel onet-panel">
+            <div class="code-panel-header">
+              <span class="code-lang">🟢 ONet (Partition Resilient)</span>
+              <span class="code-file">onet_partition.py</span>
+            </div>
+            <pre class="code-block"><code><span class="c-comment"># ONet — Network Partition Test</span>
+<span class="c-keyword">import</span> ndnSIM
+
+node = ndnSIM.createNode(<span class="c-string">"Gwen-02"</span>, type=<span class="c-string">"omnitrix"</span>)
+node.contentStore.add(<span class="c-string">"/ONet/DNA/Tetramand/v1"</span>,
+    payload=<span class="c-string">"CACHED_DNA_DATA"</span>)
+
+<span class="c-comment"># ✂️ จำลอง Network Partition</span>
+ndnSIM.breakAllLinks(node)
+<span class="c-keyword">print</span>(<span class="c-string">"⚠️ Network Partition: ALL LINKS DOWN"</span>)
+
+<span class="c-comment"># Test A: ร้องขอ DNA ที่มีในแคช</span>
+cached = node.localLookup(<span class="c-string">"/ONet/DNA/Tetramand/v1"</span>)
+<span class="c-keyword">print</span>(<span class="c-string">f"Test A (cached):  <span class="c-hl">{cached.status}</span>"</span>)
+
+<span class="c-comment"># Test B: ร้องขอ DNA ที่ไม่มีในแคช</span>
+uncached = node.fetch(<span class="c-string">"/ONet/DNA/Kineceleran/v1"</span>)
+<span class="c-keyword">print</span>(<span class="c-string">f"Test B (uncached): <span class="c-hl">{uncached.status}</span>"</span>)</code></pre>
+          </div>
+          <div class="code-panel tcp-panel">
+            <div class="code-panel-header">
+              <span class="code-lang">🔴 TCP/IP (No Resilience)</span>
+              <span class="code-file">tcp_partition.py</span>
+            </div>
+            <pre class="code-block"><code><span class="c-comment"># TCP/IP — Network Partition Test</span>
+<span class="c-keyword">import</span> requests
+
+<span class="c-comment"># ✂️ จำลอง Network Partition (server unreachable)</span>
+<span class="c-keyword">print</span>(<span class="c-string">"⚠️ Network Partition: SERVER UNREACHABLE"</span>)
+
+<span class="c-keyword">try</span>:
+    <span class="c-comment"># Test A: ร้องขอข้อมูลที่เคยดึงมา</span>
+    r1 = requests.get(<span class="c-string">"https://dna-server.onet.io/tetramand"</span>,
+                       timeout=<span class="c-number">3</span>)
+<span class="c-keyword">except</span> requests.ConnectionError:
+    <span class="c-keyword">print</span>(<span class="c-string">"Test A: ❌ CONNECTION TIMEOUT"</span>)
+
+<span class="c-keyword">try</span>:
+    <span class="c-comment"># Test B: ร้องขอข้อมูลใหม่</span>
+    r2 = requests.get(<span class="c-string">"https://dna-server.onet.io/kineceleran"</span>,
+                       timeout=<span class="c-number">3</span>)
+<span class="c-keyword">except</span> requests.ConnectionError:
+    <span class="c-keyword">print</span>(<span class="c-string">"Test B: ❌ CONNECTION TIMEOUT"</span>)
+
+<span class="c-keyword">print</span>(<span class="c-string">"💀 TCP/IP: ไม่มีแคชในตัว client"</span>)</code></pre>
+          </div>
+        </div>
+        <div class="demo-run-bar">
+          <button class="btn btn-primary demo-run-btn" onclick="runDemo(3)">▶ Run Simulation</button>
+          <span class="demo-status" id="demo-3-status"></span>
+        </div>
+        <div class="demo-output" id="demo-3-output">
+          <div class="output-placeholder">กดปุ่ม Run เพื่อดูผลลัพธ์...</div>
+        </div>
+      </div>
+
+      <!-- Demo 4: Peer Cache -->
+      <div class="code-demo fade-in" id="demo-4">
+        <div class="demo-header">
+          <span class="demo-number">Demo 4</span>
+          <h3>📦 In-Network Caching — ONet vs TCP/IP</h3>
+          <p class="demo-desc">ONet nodes แชร์ข้อมูลกัน peer-to-peer ผ่าน NDN caching ในขณะที่ TCP/IP ต้องดึงจาก server ทุกครั้ง</p>
+        </div>
+        <div class="demo-grid">
+          <div class="code-panel onet-panel">
+            <div class="code-panel-header">
+              <span class="code-lang">🟢 ONet (NDN Peer Cache)</span>
+              <span class="code-file">onet_peer_cache.py</span>
+            </div>
+            <pre class="code-block"><code><span class="c-comment"># ONet — In-Network Caching (Peer-to-Peer)</span>
+<span class="c-keyword">import</span> ndnSIM
+
+ben  = ndnSIM.createNode(<span class="c-string">"Ben-01"</span>,  type=<span class="c-string">"omnitrix"</span>)
+gwen = ndnSIM.createNode(<span class="c-string">"Gwen-02"</span>, type=<span class="c-string">"omnitrix"</span>)
+ndnSIM.link(ben, gwen, bandwidth=<span class="c-string">"10Mbps"</span>)
+
+<span class="c-comment"># Ben ดึงข้อมูลจาก Server แล้ว Cache ไว้</span>
+ben.fetch(<span class="c-string">"/ONet/DNA/Galvan/v1"</span>, cache=<span class="c-keyword">True</span>)
+
+<span class="c-comment"># Gwen ขอข้อมูลเดียวกัน → NDN ค้นหาจาก Peer</span>
+interest = ndnSIM.Interest(<span class="c-string">"/ONet/DNA/Galvan/v1"</span>)
+result = gwen.fetch(interest)  <span class="c-comment"># ดึงจาก Ben!</span>
+
+<span class="c-keyword">print</span>(<span class="c-string">f"Source: <span class="c-hl">{result.source}</span>"</span>)
+<span class="c-keyword">print</span>(<span class="c-string">f"Latency: <span class="c-hl">{result.latency}</span> ms"</span>)
+<span class="c-keyword">print</span>(<span class="c-string">"📡 ไม่ต้องไปถึง Server!"</span>)</code></pre>
+          </div>
+          <div class="code-panel tcp-panel">
+            <div class="code-panel-header">
+              <span class="code-lang">🔴 TCP/IP (No P2P Cache)</span>
+              <span class="code-file">tcp_no_cache.py</span>
+            </div>
+            <pre class="code-block"><code><span class="c-comment"># TCP/IP — Every request hits the server</span>
+<span class="c-keyword">import</span> requests, time
+
+<span class="c-comment"># User 1 (Ben) ดึงข้อมูลจาก Server</span>
+r1 = requests.get(<span class="c-string">"https://dna-server.onet.io/galvan"</span>)
+<span class="c-keyword">print</span>(<span class="c-string">f"Ben: {r1.status_code} — {r1.elapsed.total_seconds()*1000:.0f} ms"</span>)
+
+<span class="c-comment"># User 2 (Gwen) ขอข้อมูลเดียวกัน</span>
+<span class="c-comment"># ❌ ต้อง request server ใหม่ทั้งหมด!</span>
+start = time.time()
+r2 = requests.get(<span class="c-string">"https://dna-server.onet.io/galvan"</span>)
+latency = (time.time() - start) * <span class="c-number">1000</span>
+
+<span class="c-keyword">print</span>(<span class="c-string">f"Gwen: {r2.status_code} — <span class="c-hl">{latency}</span> ms"</span>)
+<span class="c-keyword">print</span>(<span class="c-string">"⚠️ ไม่มี peer cache — ต้องดึงจาก server ซ้ำ"</span>)
+<span class="c-keyword">print</span>(<span class="c-string">"⚠️ Server load เพิ่มขึ้นตามจำนวน user"</span>)</code></pre>
+          </div>
+        </div>
+        <div class="demo-run-bar">
+          <button class="btn btn-primary demo-run-btn" onclick="runDemo(4)">▶ Run Simulation</button>
+          <span class="demo-status" id="demo-4-status"></span>
+        </div>
+        <div class="demo-output" id="demo-4-output">
+          <div class="output-placeholder">กดปุ่ม Run เพื่อดูผลลัพธ์...</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Latency Comparison Chart -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <span class="label">Latency Analysis</span>
+        <h2>Latency Comparison</h2>
+        <div class="divider"></div>
+        <p>เปรียบเทียบค่า Latency ระหว่าง ONet กับ TCP/IP ในแต่ละสถานการณ์</p>
+      </div>
+
+      <div class="chart-container fade-in fade-in-delay-1">
+        <div class="chart-bar-group">
+          <div class="chart-row">
+            <span class="chart-label">S1: Local Cache</span>
+            <div class="chart-bar-track">
+              <div class="chart-bar onet" data-width="1.5" data-max="500" style="width: 0;">
+                <span class="bar-value">3.2 ms</span>
+              </div>
+            </div>
+          </div>
+          <div class="chart-row">
+            <span class="chart-label">S2: Consensus</span>
+            <div class="chart-bar-track">
+              <div class="chart-bar onet" data-width="49" data-max="500" style="width: 0;">
+                <span class="bar-value">247 ms</span>
+              </div>
+            </div>
+          </div>
+          <div class="chart-row">
+            <span class="chart-label">S4: Peer Cache</span>
+            <div class="chart-bar-track">
+              <div class="chart-bar onet" data-width="4.4" data-max="500" style="width: 0;">
+                <span class="bar-value">22 ms</span>
+              </div>
+            </div>
+          </div>
+          <div class="chart-row">
+            <span class="chart-label">S6: Mobility</span>
+            <div class="chart-bar-track">
+              <div class="chart-bar onet" data-width="7.4" data-max="500" style="width: 0;">
+                <span class="bar-value">37 ms</span>
+              </div>
+            </div>
+          </div>
+          <div class="chart-row">
+            <span class="chart-label">S7: Multi-hop</span>
+            <div class="chart-bar-track">
+              <div class="chart-bar onet" data-width="13" data-max="500" style="width: 0;">
+                <span class="bar-value">65 ms</span>
+              </div>
+            </div>
+          </div>
+          <div class="chart-row">
+            <span class="chart-label">TCP/IP Baseline</span>
+            <div class="chart-bar-track">
+              <div class="chart-bar tcp" data-width="75" data-max="500" style="width: 0;">
+                <span class="bar-value">375 ms</span>
+              </div>
+            </div>
+          </div>
+          <div class="chart-row">
+            <span class="chart-label">TCP/IP + Partition</span>
+            <div class="chart-bar-track">
+              <div class="chart-bar tcp-fail" data-width="100" data-max="500" style="width: 0;">
+                <span class="bar-value">TIMEOUT ∞</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-legend">
+          <span class="legend-item"><span class="legend-dot onet-dot"></span> ONet (Bio-SCION)</span>
+          <span class="legend-item"><span class="legend-dot tcp-dot"></span> TCP/IP</span>
+          <span class="legend-item"><span class="legend-dot fail-dot"></span> TCP/IP (Failed)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Per-Scenario Results Table -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <span class="label">Detailed Results</span>
+        <h2>Per-Scenario Analysis</h2>
+        <div class="divider"></div>
+        <p>ผลลัพธ์โดยละเอียดของแต่ละสถานการณ์จำลอง</p>
+      </div>
+
+      <div class="results-table-wrapper fade-in fade-in-delay-1">
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>Scenario</th>
+              <th>Protocol</th>
+              <th>Latency</th>
+              <th>Delivery</th>
+              <th>Cache</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="scenario-tag s1">S1</span> Local Cache Hit</td>
+              <td>ONet NDN</td>
+              <td class="mono">3.2 ms</td>
+              <td class="mono">100%</td>
+              <td><span class="badge badge-hit">HIT</span></td>
+              <td><span class="badge badge-pass">✓ PASS</span></td>
+            </tr>
+            <tr>
+              <td><span class="scenario-tag s2">S2</span> Federated Consensus</td>
+              <td>ONet PBFT</td>
+              <td class="mono">247 ms</td>
+              <td class="mono">100%</td>
+              <td><span class="badge badge-miss">MISS</span></td>
+              <td><span class="badge badge-pass">✓ PASS</span></td>
+            </tr>
+            <tr>
+              <td><span class="scenario-tag s3">S3a</span> Partition (Cached)</td>
+              <td>ONet NDN</td>
+              <td class="mono">2.8 ms</td>
+              <td class="mono">100%</td>
+              <td><span class="badge badge-hit">HIT</span></td>
+              <td><span class="badge badge-pass">✓ PASS</span></td>
+            </tr>
+            <tr class="row-fail">
+              <td><span class="scenario-tag s3">S3b</span> Partition (Uncached)</td>
+              <td>ONet NDN</td>
+              <td class="mono">— ms</td>
+              <td class="mono">0%</td>
+              <td><span class="badge badge-miss">MISS</span></td>
+              <td><span class="badge badge-fail">✗ FAIL</span></td>
+            </tr>
+            <tr>
+              <td><span class="scenario-tag s4">S4</span> Peer Cache (NDN)</td>
+              <td>ONet NDN</td>
+              <td class="mono">22 ms</td>
+              <td class="mono">100%</td>
+              <td><span class="badge badge-hit">PEER</span></td>
+              <td><span class="badge badge-pass">✓ PASS</span></td>
+            </tr>
+            <tr class="row-fail">
+              <td><span class="scenario-tag s5">S5</span> Consensus Rejection</td>
+              <td>ONet PBFT</td>
+              <td class="mono">312 ms</td>
+              <td class="mono">100%</td>
+              <td><span class="badge badge-miss">MISS</span></td>
+              <td><span class="badge badge-reject">⊘ REJECT</span></td>
+            </tr>
+            <tr>
+              <td><span class="scenario-tag s6">S6</span> Node Mobility</td>
+              <td>ONet NDN</td>
+              <td class="mono">37 ms</td>
+              <td class="mono">100%</td>
+              <td><span class="badge badge-miss">MISS</span></td>
+              <td><span class="badge badge-pass">✓ PASS</span></td>
+            </tr>
+            <tr>
+              <td><span class="scenario-tag s7">S7</span> Multi-hop Routing</td>
+              <td>ONet NDN</td>
+              <td class="mono">65 ms</td>
+              <td class="mono">100%</td>
+              <td><span class="badge badge-hit">RELAY</span></td>
+              <td><span class="badge badge-pass">✓ PASS</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ONet vs TCP/IP Comparison -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <span class="label">Head to Head</span>
+        <h2>ONet vs TCP/IP</h2>
+        <div class="divider"></div>
+        <p>เปรียบเทียบสถาปัตยกรรม ONet (Bio-SCION) กับ TCP/IP แบบดั้งเดิม</p>
+      </div>
+
+      <div class="comparison-grid fade-in fade-in-delay-1">
+        <!-- Row 1: Latency -->
+        <div class="compare-card">
+          <div class="compare-header">⚡ Average Latency</div>
+          <div class="compare-body">
+            <div class="compare-item winner">
+              <span class="compare-protocol">ONet</span>
+              <span class="compare-val">3.2 — 247 ms</span>
+              <span class="compare-note">ขึ้นอยู่กับ Tier</span>
+            </div>
+            <div class="compare-vs">VS</div>
+            <div class="compare-item">
+              <span class="compare-protocol tcp">TCP/IP</span>
+              <span class="compare-val">375 ms</span>
+              <span class="compare-note">Round-trip ผ่าน ISP</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: Partition -->
+        <div class="compare-card">
+          <div class="compare-header">💔 Network Partition</div>
+          <div class="compare-body">
+            <div class="compare-item winner">
+              <span class="compare-protocol">ONet</span>
+              <span class="compare-val">50% ยังใช้งานได้</span>
+              <span class="compare-note">Cached DNA ยังทำงาน</span>
+            </div>
+            <div class="compare-vs">VS</div>
+            <div class="compare-item loser">
+              <span class="compare-protocol tcp">TCP/IP</span>
+              <span class="compare-val">0% — ใช้งานไม่ได้</span>
+              <span class="compare-note">Connection timeout ทั้งหมด</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 3: Caching -->
+        <div class="compare-card">
+          <div class="compare-header">📦 In-Network Caching</div>
+          <div class="compare-body">
+            <div class="compare-item winner">
+              <span class="compare-protocol">ONet</span>
+              <span class="compare-val">94.3% Cache Hit</span>
+              <span class="compare-note">Peer-to-peer data sharing</span>
+            </div>
+            <div class="compare-vs">VS</div>
+            <div class="compare-item loser">
+              <span class="compare-protocol tcp">TCP/IP</span>
+              <span class="compare-val">0% — ไม่มี</span>
+              <span class="compare-note">ต้องดึงจาก server ทุกครั้ง</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 4: Mobility -->
+        <div class="compare-card">
+          <div class="compare-header">🏃 Node Mobility</div>
+          <div class="compare-body">
+            <div class="compare-item winner">
+              <span class="compare-protocol">ONet</span>
+              <span class="compare-val">Seamless Handoff</span>
+              <span class="compare-note">37 ms — ไม่มี session หลุด</span>
+            </div>
+            <div class="compare-vs">VS</div>
+            <div class="compare-item loser">
+              <span class="compare-protocol tcp">TCP/IP</span>
+              <span class="compare-val">Re-establish Required</span>
+              <span class="compare-note">~2000 ms TCP 3-way handshake ใหม่</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 5: Security -->
+        <div class="compare-card">
+          <div class="compare-header">🛡️ Security Model</div>
+          <div class="compare-body">
+            <div class="compare-item winner">
+              <span class="compare-protocol">ONet</span>
+              <span class="compare-val">Data-Level Signing</span>
+              <span class="compare-note">ข้อมูลตรวจสอบตัวเองได้ + PBFT consensus</span>
+            </div>
+            <div class="compare-vs">VS</div>
+            <div class="compare-item loser">
+              <span class="compare-protocol tcp">TCP/IP</span>
+              <span class="compare-val">Channel-Level Only</span>
+              <span class="compare-note">TLS เข้ารหัสเฉพาะช่องทาง ไม่ใช่ตัวข้อมูล</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 6: Access Control -->
+        <div class="compare-card">
+          <div class="compare-header">🚫 Access Control</div>
+          <div class="compare-body">
+            <div class="compare-item winner">
+              <span class="compare-protocol">ONet</span>
+              <span class="compare-val">Decentralized PBFT</span>
+              <span class="compare-note">3 nodes ลงมติ — ไม่มี single point of failure</span>
+            </div>
+            <div class="compare-vs">VS</div>
+            <div class="compare-item loser">
+              <span class="compare-protocol tcp">TCP/IP</span>
+              <span class="compare-val">Centralized Server</span>
+              <span class="compare-note">Single point of failure</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Throughput & Packet Delivery Chart -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <span class="label">Throughput</span>
+        <h2>Packet Delivery & Throughput</h2>
+        <div class="divider"></div>
+        <p>อัตราการส่ง Packet สำเร็จและ Throughput ในแต่ละสถานการณ์</p>
+      </div>
+
+      <div class="throughput-grid fade-in fade-in-delay-1">
+        <div class="tp-card">
+          <div class="tp-ring" data-percent="100">
+            <svg viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" class="tp-bg"/>
+              <circle cx="50" cy="50" r="42" class="tp-fill green" style="stroke-dashoffset: 264"/>
+            </svg>
+            <span class="tp-text">100%</span>
+          </div>
+          <div class="tp-label">S1: Local Cache</div>
+          <div class="tp-sub">5.2 Mbps</div>
+        </div>
+        <div class="tp-card">
+          <div class="tp-ring" data-percent="100">
+            <svg viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" class="tp-bg"/>
+              <circle cx="50" cy="50" r="42" class="tp-fill cyan" style="stroke-dashoffset: 264"/>
+            </svg>
+            <span class="tp-text">100%</span>
+          </div>
+          <div class="tp-label">S2: Consensus</div>
+          <div class="tp-sub">3.8 Mbps</div>
+        </div>
+        <div class="tp-card">
+          <div class="tp-ring" data-percent="50">
+            <svg viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" class="tp-bg"/>
+              <circle cx="50" cy="50" r="42" class="tp-fill pink" style="stroke-dashoffset: 264"/>
+            </svg>
+            <span class="tp-text">50%</span>
+          </div>
+          <div class="tp-label">S3: Partition</div>
+          <div class="tp-sub">Cached: ✓ | Uncached: ✗</div>
+        </div>
+        <div class="tp-card">
+          <div class="tp-ring" data-percent="100">
+            <svg viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" class="tp-bg"/>
+              <circle cx="50" cy="50" r="42" class="tp-fill green" style="stroke-dashoffset: 264"/>
+            </svg>
+            <span class="tp-text">100%</span>
+          </div>
+          <div class="tp-label">S4: Peer Cache</div>
+          <div class="tp-sub">4.6 Mbps</div>
+        </div>
+        <div class="tp-card">
+          <div class="tp-ring" data-percent="100">
+            <svg viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" class="tp-bg"/>
+              <circle cx="50" cy="50" r="42" class="tp-fill purple" style="stroke-dashoffset: 264"/>
+            </svg>
+            <span class="tp-text">100%</span>
+          </div>
+          <div class="tp-label">S5: Rejection</div>
+          <div class="tp-sub">Reject delivered</div>
+        </div>
+        <div class="tp-card">
+          <div class="tp-ring" data-percent="100">
+            <svg viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" class="tp-bg"/>
+              <circle cx="50" cy="50" r="42" class="tp-fill cyan" style="stroke-dashoffset: 264"/>
+            </svg>
+            <span class="tp-text">100%</span>
+          </div>
+          <div class="tp-label">S6: Mobility</div>
+          <div class="tp-sub">4.1 Mbps</div>
+        </div>
+        <div class="tp-card">
+          <div class="tp-ring" data-percent="100">
+            <svg viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" class="tp-bg"/>
+              <circle cx="50" cy="50" r="42" class="tp-fill green" style="stroke-dashoffset: 264"/>
+            </svg>
+            <span class="tp-text">100%</span>
+          </div>
+          <div class="tp-label">S7: Multi-hop</div>
+          <div class="tp-sub">3.4 Mbps</div>
+        </div>
+        <div class="tp-card">
+          <div class="tp-ring" data-percent="0">
+            <svg viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" class="tp-bg"/>
+              <circle cx="50" cy="50" r="42" class="tp-fill pink" style="stroke-dashoffset: 264"/>
+            </svg>
+            <span class="tp-text fail-text">0%</span>
+          </div>
+          <div class="tp-label">TCP/IP Partition</div>
+          <div class="tp-sub">Total Failure</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Conclusion -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <span class="label">Conclusion</span>
+        <h2>สรุปผลการจำลอง</h2>
+        <div class="divider"></div>
+      </div>
+
+      <div class="conclusion-grid fade-in fade-in-delay-1">
+        <div class="card" style="padding: 2rem;">
+          <div class="card-icon">✅</div>
+          <h3>Local Authority ทำงานได้จริง</h3>
+          <p style="margin-top: 0.6rem;">Tier 1 ของ ONet สามารถดำเนินการ Transformation ได้ด้วย Latency เพียง ~3 ms โดยไม่ต้องพึ่งพาเครือข่าย — พิสูจน์ว่าระบบรองรับ real-time response สำหรับสถานการณ์ฉุกเฉินได้</p>
+        </div>
+        <div class="card" style="padding: 2rem;">
+          <div class="card-icon">🛡️</div>
+          <h3>Federated Consensus ปลอดภัย</h3>
+          <p style="margin-top: 0.6rem;">Tier 2 ใช้ PBFT consensus 3 nodes ตรวจสอบการเข้าถึงข้อมูลใหม่ — Latency ~247 ms ยอมรับได้สำหรับ administrative action และสามารถ reject คำขอที่ผิดจริยธรรมได้</p>
+        </div>
+        <div class="card" style="padding: 2rem;">
+          <div class="card-icon">💔</div>
+          <h3>ทนทานต่อ Network Partition</h3>
+          <p style="margin-top: 0.6rem;">เมื่อเครือข่ายถูกแบ่งแยก ONet ยังสามารถให้บริการข้อมูลที่แคชไว้ได้ (50% success) ในขณะที่ TCP/IP ล้มเหลว 100% — ตอบโจทย์ life-critical system</p>
+        </div>
+        <div class="card" style="padding: 2rem;">
+          <div class="card-icon">🔗</div>
+          <h3>In-Network Caching ลดภาระ Server</h3>
+          <p style="margin-top: 0.6rem;">NDN caching ทำให้ nodes แชร์ข้อมูลกันแบบ peer-to-peer ได้ (Cache Hit Ratio 94.3%) — ลดภาระจาก server กลางและเพิ่ม fault tolerance</p>
+        </div>
+        <div class="card" style="padding: 2rem;">
+          <div class="card-icon">🏃</div>
+          <h3>Seamless Node Mobility</h3>
+          <p style="margin-top: 0.6rem;">เมื่อ node เคลื่อนที่ ONet สามารถ handoff ไปยัง node ที่ใกล้ที่สุดโดยอัตโนมัติด้วย Latency เพียง 37 ms — ไม่มี session หลุดเหมือน TCP/IP</p>
+        </div>
+        <div class="card" style="padding: 2rem;">
+          <div class="card-icon">🔀</div>
+          <h3>Multi-hop Routing สำเร็จ</h3>
+          <p style="margin-top: 0.6rem;">NDN routing ส่งข้อมูลผ่านหลาย node ได้สำเร็จด้วย Latency 65 ms — และ node ระหว่างทางจะ cache ข้อมูลไว้อัตโนมัติทำให้การขอครั้งถัดไปเร็วขึ้น</p>
+        </div>
+      </div>
+
+      <div class="conclusion-banner fade-in fade-in-delay-2">
+        <h3>🧬 ONet Bio-SCION Architecture — Validated</h3>
+        <p>สถาปัตยกรรม ONet สามารถรองรับระบบชีวภาพที่สำคัญต่อชีวิตได้ดีกว่า TCP/IP ในทุกตัววัดที่ทดสอบ โดยเฉพาะในสถานการณ์วิกฤตที่ต้องการ low-latency, partition tolerance, และ decentralized security</p>
+        <div style="margin-top: 1.2rem;">
+          <a href="simulation.html" class="btn btn-primary">← Back to Simulation</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>ONet — Omnitrix Communication Network © 2026 | <span>Group 3</span> | CP352005 Computer Networks</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

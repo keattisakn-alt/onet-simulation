@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="ONet — Omnitrix Communication Network. A Bio-SCION architecture for life-critical biological systems, beyond TCP/IP.">
+  <title>ONet — Omnitrix Communication Network</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <a href="index.html" class="nav-logo">⬡ ONet</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Architecture</a></li>
+      <li><a href="plan.html">Plan</a></li>
+      <li><a href="simulation.html">Simulation</a></li>
+      <li><a href="results.html">Results</a></li>
+    </ul>
+    <div class="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge fade-in">
+      <span class="dot"></span>
+      CP352005 — Computer Networks
+    </div>
+    <h1 class="fade-in fade-in-delay-1">
+      Omnitrix<br><span class="gradient-text">Communication Network</span>
+    </h1>
+    <p class="fade-in fade-in-delay-2">
+      An alternative network architecture that safely supports life-critical, biologically fluid systems — where
+      traditional TCP/IP fails.
+    </p>
+    <div class="hero-buttons fade-in fade-in-delay-3">
+      <a href="#framework" class="btn btn-primary">Explore Architecture ↓</a>
+      <a href="simulation.html" class="btn btn-outline">Run Simulation →</a>
+    </div>
+  </section>
+
+  <!-- Overview -->
+  <section class="section" id="overview">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <span class="label">Project Overview</span>
+        <h2>Why ONet?</h2>
+        <div class="divider"></div>
+        <p>โปรโตคอล TCP/IP แบบดั้งเดิมไม่เหมาะสำหรับระบบชีวภาพที่สำคัญต่อชีวิต เนื่องจากปัญหา latency, การปลอมแปลงตัวตน,
+          และข้อจำกัดของการส่งข้อมูลแบบ best-effort</p>
+      </div>
+      <div class="grid-3 fade-in fade-in-delay-1">
+        <div class="card">
+          <div class="card-icon">📡</div>
+          <h3>Course</h3>
+          <p>รายวิชา Computer Networks CP352005</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧬</div>
+          <h3>Project</h3>
+          <p>Omnitrix Communication Networks (ONet) — กลุ่ม 3</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎯</div>
+          <h3>Objective</h3>
+          <p>ออกแบบและจำลองสถาปัตยกรรมเครือข่ายทางเลือกที่รองรับระบบชีวภาพที่สำคัญต่อชีวิตได้อย่างปลอดภัย</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Framework -->
+  <section class="section" id="framework">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <span class="label">Core Architecture</span>
+        <h2>Bio-SCION Framework</h2>
+        <div class="divider"></div>
+        <p>ONet ยกเลิกการ routing แบบ IP มาตรฐาน และใช้แนวทางแบบไฮบริดที่รวม Information-Centric Networking กับ Isolated
+          Trust Domains เข้าด้วยกัน</p>
+      </div>
+
+      <div class="grid-2" style="margin-bottom: 1.5rem;">
+        <!-- ISD -->
+        <div class="card fade-in">
+          <div class="card-icon">🛡️</div>
+          <h3>SCION Isolation Domain (ISD)</h3>
+          <p style="margin-bottom: 0.8rem;">ONet ทำงานเป็น SCION Isolation Domain แบบส่วนตัว
+            ที่ถูกแยกออกจากอินเทอร์เน็ตสาธารณะด้วยการเข้ารหัส</p>
+          <ul class="feature-list">
+            <li>ป้องกันการโจมตีแบบ DDoS และ BGP hijacking</li>
+            <li>แยกชั้นควบคุมทางชีวภาพที่สำคัญต่อชีวิตออกจากเครือข่ายสาธารณะ</li>
+            <li>ตรวจสอบเส้นทางด้วยการเข้ารหัส (Cryptographic Path Verification)</li>
+          </ul>
+        </div>
+        <!-- NDN -->
+        <div class="card fade-in fade-in-delay-1">
+          <div class="card-icon">🔗</div>
+          <h3>Named Data Networking (NDN)</h3>
+          <p style="margin-bottom: 0.8rem;">การ routing อิงตามชื่อเนื้อหา (content names) แทนที่จะใช้ IP address
+            ทางกายภาพ</p>
+          <ul class="feature-list">
+            <li>ใช้ชื่อเนื้อหา เช่น <span class="code-tag">/ONet/DNA/Tetramand/v1</span></li>
+            <li>ทนทานต่อความผิดพลาดสูง ด้วยระบบ peer caching</li>
+            <li>ไม่พึ่งพา server ตัวเดียว</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- State Capsule -->
+      <div class="card fade-in" style="max-width: 700px; margin: 0 auto;">
+        <div class="card-icon">📦</div>
+        <h3>The "State Capsule" (Bio-Packet)</h3>
+        <p style="margin-bottom: 0.8rem;">ใช้แทน TCP/IP packet แบบดั้งเดิม ด้วย NDN Data Packet แบบ atomic</p>
+        <ul class="feature-list">
+          <li><strong>Payload:</strong> ลำดับชีวภาพ (DNA) + นโยบายข้อจำกัด (ขีดจำกัดด้านสิ่งแวดล้อม)</li>
+          <li><strong>Security:</strong> ทุก packet ถูกเซ็นด้วยการเข้ารหัสในระดับข้อมูล</li>
+          <li><strong>Result:</strong> ข้อมูลตรวจสอบตัวเองได้ ไม่จำเป็นต้องเชื่อถือช่องทางการส่ง</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Security Model -->
+  <section class="section" id="security">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <span class="label">Governance</span>
+        <h2>Security Model</h2>
+        <div class="divider"></div>
+        <p>ระบบความปลอดภัยแบบ Capability-Based แบ่งเป็น 2 ระดับการทำงาน</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card tier-card tier-1 fade-in">
+          <span class="tier-label">Tier 1 — Local Authority</span>
+          <h3>Emergency Actions</h3>
+          <p style="margin-top: 0.6rem;">สำหรับการ Transformation แบบ zero-latency อุปกรณ์จะใช้ capability token
+            ที่เก็บไว้ในแคชล่วงหน้า ไม่จำเป็นต้องเชื่อมต่อเครือข่าย —
+            รับประกันความปลอดภัยในระหว่างที่เครือข่ายถูกแบ่งแยก</p>
+          <ul class="feature-list" style="margin-top: 0.8rem;">
+            <li>ใช้ capability token ที่แคชไว้ล่วงหน้า</li>
+            <li>ทำงานได้แม้ออฟไลน์ / ระหว่าง partition</li>
+            <li>ดำเนินการด้วย latency เป็นศูนย์</li>
+          </ul>
+        </div>
+        <div class="card tier-card tier-2 fade-in fade-in-delay-1">
+          <span class="tier-label">Tier 2 — Federated Consensus</span>
+          <h3>Administrative Actions</h3>
+          <p style="margin-top: 0.6rem;">การปลดล็อกลำดับ DNA ใหม่ ต้องอาศัยการลงมติแบบกระจายศูนย์ (PBFT) จาก Node
+            ที่เชื่อถือได้ เพื่อตรวจสอบการปฏิบัติตามข้อกำหนดด้านจริยธรรม ก่อนออก capability token ใหม่</p>
+          <ul class="feature-list" style="margin-top: 0.8rem;">
+            <li>ใช้ระบบ Consensus แบบ PBFT กระจายศูนย์</li>
+            <li>ตรวจสอบการปฏิบัติตามข้อกำหนดด้านจริยธรรม</li>
+            <li>ระบบอนุรักษ์สายพันธุ์เอเลี่ยน (ASPS)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Simulation Scope -->
+  <section class="section" id="sim-scope">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <span class="label">Validation</span>
+        <h2>Simulation Scope</h2>
+        <div class="divider"></div>
+        <p>สถาปัตยกรรมถูกตรวจสอบผ่านตัวจำลองเครือข่าย ns-3 โดยใช้โมดูล ndnSIM</p>
+      </div>
+      <div class="grid-3 fade-in fade-in-delay-1">
+        <div class="card" style="text-align:center;">
+          <div class="card-icon" style="margin: 0 auto 1rem;">📊</div>
+          <h3>Delivery Rates</h3>
+          <p>อัตราความสำเร็จในการส่ง packet ระหว่างที่ node เคลื่อนที่</p>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div class="card-icon" style="margin: 0 auto 1rem;">⏱️</div>
+          <h3>Latency</h3>
+          <p>เปรียบเทียบ latency ระหว่างการทำงานภายใน (local) กับการลงมติแบบกระจาย (federated consensus)</p>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div class="card-icon" style="margin: 0 auto 1rem;">🌐</div>
+          <h3>Partition Resilience</h3>
+          <p>ความทนทานต่อการแบ่งแยกเครือข่าย ด้วยระบบ mesh fallback</p>
+        </div>
+      </div>
+      <div style="text-align:center; margin-top: 2rem;" class="fade-in fade-in-delay-2">
+        <a href="simulation.html" class="btn btn-primary">Try Interactive Simulation →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>ONet — Omnitrix Communication Network © 2026 | <span>Group 3</span> | CP352005 Computer Networks</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
